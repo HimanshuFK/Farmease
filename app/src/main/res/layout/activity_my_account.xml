@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.MyAccountActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/toolbar"
+        android:layout_height="@dimen/_40sdp">
+
+        <ImageView
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="match_parent"
+            android:src="@mipmap/ic_back"
+            android:id="@+id/imgback"
+            android:padding="@dimen/_8sdp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:text="My Account"
+            android:textSize="@dimen/_14sdp"
+            android:gravity="center"/>
+    </RelativeLayout>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="@dimen/_80sdp"
+        android:layout_height="@dimen/_80sdp"
+       android:layout_centerHorizontal="true"
+        android:layout_below="@+id/toolbar"
+        android:src="@drawable/com_facebook_profile_picture_blank_portrait"
+        android:id="@+id/user_image"
+        android:layout_marginTop="@dimen/_20sdp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user_image"
+        android:id="@+id/user_name"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:padding="@dimen/_10sdp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/user_email"
+        android:padding="@dimen/_10sdp"
+        android:layout_below="@+id/user_name"
+        />
+
+</RelativeLayout>

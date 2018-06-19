@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "841257800892",
+    "firebase_url": "https://farmease-197312.firebaseio.com",
+    "project_id": "farmease-197312",
+    "storage_bucket": "farmease-197312.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:841257800892:android:8eafa5f03f21eaf8",
+        "android_client_info": {
+          "package_name": "com.farmease.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "841257800892-voilrmmje5gnv39p6iits549ko9vh0eu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.farmease.app",
+            "certificate_hash": "ddabed470315c2ca4da5959617ca204da01c1e09"
+          }
+        },
+        {
+          "client_id": "841257800892-1am2lbuq4c9ar1kjr4r2pe1ja7333ojr.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "841257800892-1am2lbuq4c9ar1kjr4r2pe1ja7333ojr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUHc_VVDJEXRQL5_jzRSN9S0OdgEY2p4s"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "841257800892-1am2lbuq4c9ar1kjr4r2pe1ja7333ojr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

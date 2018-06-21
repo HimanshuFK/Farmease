@@ -5,4 +5,5 @@ public class Constants {
     public static String username="username";
     public static String useremail="üseremail";
     public static String userimg="userimg";
+    public static String token="token";
 }

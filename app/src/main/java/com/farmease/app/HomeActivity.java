@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.farmease.app.activity.MyAccountActivity;
 import com.farmease.app.adapter.SlideImageAdapter;
 import com.farmease.app.location.LocationSearchActivity;
 import com.google.android.gms.common.ConnectionResult;
@@ -82,7 +83,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     mTextMessage.setText(R.string.title_dashboard);
                     return true;
                 case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
+                   // mTextMessage.setText(R.string.title_notifications);
+                    startActivity(new Intent(HomeActivity.this, MyAccountActivity.class));
                     return true;
             }
             return false;

@@ -77,9 +77,35 @@ public class VideoPlayerActivity  extends YouTubeBaseActivity implements
             player.loadVideo("1ah9VrF3enA");
 
             // Hiding player controls
-            player.setPlayerStyle(PlayerStyle.CHROMELESS);
+            player.setPlayerStyle(PlayerStyle.DEFAULT);
+            player.setPlaybackEventListener(playbackEventListener);
         }
     }
+
+    private YouTubePlayer.PlaybackEventListener playbackEventListener = new YouTubePlayer.PlaybackEventListener() {
+
+        @Override
+        public void onBuffering(boolean arg0) {
+        }
+
+        @Override
+        public void onPaused() {
+            Toast.makeText(VideoPlayerActivity.this, "Video paused", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onPlaying() {
+        }
+
+        @Override
+        public void onSeekTo(int arg0) {
+        }
+
+        @Override
+        public void onStopped() {
+        }
+
+    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -1,10 +1,18 @@
 package com.farmease.app.network;
 
+import android.content.Context;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.IOException;
+
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -42,6 +50,34 @@ public class RetrofitFactory {
                     .client(httpClient.build())
                     .build();
         }
+        return mInstance;
+    }
+
+    public static Retrofit getRetrofitInstance(final String token) {
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Interceptor.Chain chain) throws IOException {
+                Request originalRequest = chain.request();
+
+
+                Request request = originalRequest.newBuilder()
+                        .header("X_Auth_Token", token)
+                        .method(originalRequest.method(), originalRequest.body())
+                        .build();
+
+                return chain.proceed(request);
+            }
+        });
+        OkHttpClient client = httpClient.build();
+
+        mInstance = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+
         return mInstance;
     }
 

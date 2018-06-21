@@ -1,0 +1,16 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/progress_bar"
+        android:layout_width="50dp"
+        app:indicatorName="BallSpinFadeLoaderIndicator"
+        app:indicatorColor="@color/black"
+        android:layout_height="50dp"
+        android:visibility="visible" />
+
+</RelativeLayout>

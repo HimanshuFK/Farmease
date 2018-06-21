@@ -56,6 +56,13 @@ public class RetrofitErrorHandler {
                                 R.string.toastResponseTimeout),
                         Toast.LENGTH_SHORT);
                 break;
+            case 409:
+                AppToast.showToast(
+                        context,
+                        context.getResources().getString(
+                                R.string.toastAlreadyExist),
+                        Toast.LENGTH_SHORT);
+                break;
             case 500:
                 AppToast.showToast(
                         context,

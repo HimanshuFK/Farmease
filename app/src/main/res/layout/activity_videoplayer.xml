@@ -16,6 +16,7 @@
             android:id="@+id/youtube_view"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_150sdp"
+            android:clickable="true"
             android:layout_marginBottom="10dp" />
 
 

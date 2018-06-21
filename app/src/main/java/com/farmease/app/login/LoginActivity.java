@@ -1,6 +1,5 @@
 package com.farmease.app.login;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -27,6 +26,7 @@ import com.farmease.app.R;
 import com.farmease.app.network.RetrofitErrorHandler;
 import com.farmease.app.network.RetrofitFactory;
 import com.farmease.app.utility.Constants;
+import com.farmease.app.utility.CustomProgressBar;
 import com.farmease.app.utility.Utility;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -48,9 +48,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,View.OnClickListener{
+public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     @BindView(R.id.login_button)
     LoginButton fbBtn;
@@ -63,6 +62,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @BindView(R.id.btn_login)
     Button btnLogin;
     private Unbinder unbinder;
+    private CustomProgressBar progressBar;
     private GoogleApiClient googleApiClient;
     private CallbackManager callbackManager;
 
@@ -77,11 +77,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         setContentView(R.layout.activity_login);
-        unbinder= ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
         callbackManager = CallbackManager.Factory.create();
         fbBtn.setReadPermissions("email");
         signin_google.setOnClickListener(this);
         fbBtn.setOnClickListener(this);
+        progressBar = CustomProgressBar.getInstance();
         facebookLogin();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -119,8 +120,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             String personPhotoUrl = acct.getPhotoUrl().toString();
             String email = acct.getEmail();
 
-            Utility.savePref(LoginActivity.this, Constants.username,personName);
-            Utility.savePref(LoginActivity.this,Constants.useremail,email);
+            Utility.savePref(LoginActivity.this, Constants.username, personName);
+            Utility.savePref(LoginActivity.this, Constants.useremail, email);
 
             Log.e(TAG, "Name: " + personName + ", email: " + email
                     + ", Image: " + personPhotoUrl);
@@ -132,6 +133,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         }
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -140,7 +142,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
-        }else {
+        } else {
             callbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -151,9 +153,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void userSignIn() {
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Signing Up...");
-        progressDialog.show();
+
+        progressBar.showProgress(LoginActivity.this);
 
         final String email = edtEmail.getText().toString().trim();
         final String password = edtPassword.getText().toString().trim();
@@ -166,24 +167,26 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         call.enqueue(new Callback<Result>() {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
-                progressDialog.dismiss();
-                Log.e("values",""+email+password);
+                progressBar.hideProgress();
+                Log.e("values", "" + email + password);
                 if (response.isSuccessful()) {
                     finish();
-                    Toast.makeText(LoginActivity.this,response.body().getMessage() , Toast.LENGTH_SHORT).show();
+                    Log.e("token", response.body().getResult().getToken());
+                    Utility.savePref(LoginActivity.this, Constants.token, response.body().getResult().getToken());
+                    Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     //SharedPrefManager.getInstance(getApplicationContext()).userLogin(response.body().getUser());
                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                 } else {
                     int statusCode = response.code();
                     RetrofitErrorHandler errorHandler = new RetrofitErrorHandler(LoginActivity.this);
                     errorHandler.responseOnError(statusCode);
-                   // Toast.makeText(getApplicationContext(), "Invalid email or password", Toast.LENGTH_LONG).show();
+                    // Toast.makeText(getApplicationContext(), "Invalid email or password", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Result> call, Throwable t) {
-                progressDialog.dismiss();
+                progressBar.hideProgress();
                 Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
@@ -230,7 +233,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
             @Override
             public void onError(FacebookException e) {
-                Toast.makeText(getApplicationContext(),"Try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Try again", Toast.LENGTH_SHORT).show();
             }
 
         });
@@ -238,7 +241,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.signin_google:
                 signIn();
                 break;
@@ -255,6 +258,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         // Logs 'install' and 'app activate' App Events.
         AppEventsLogger.activateApp(this);
     }
+
     @Override
     protected void onPause() {
         super.onPause();

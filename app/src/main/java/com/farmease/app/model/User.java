@@ -1,4 +1,4 @@
-package com.farmease.app.login;
+package com.farmease.app.model;
 
 public class User {
 

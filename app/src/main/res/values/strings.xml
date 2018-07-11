@@ -6,11 +6,12 @@
     <string name="title_dashboard">Categories</string>
     <string name="title_notifications">Account</string>
     <string name="error_player">Network error</string>
+    <string name="text_discount"><b>Up to 20% Off</b> on this product.</string>
 
     <string name="no_internet">Please check your internet connection!</string>
     <string name="network_error">A network error has occured. Please check your internet connection and try again later.</string>
     <string name="unexpected_error">Something went wrong. Please try again.</string>
-    <string name="server_unable_to_process">Oops. We did not get that. Please try again.</string>
+    <string name="server_unable_to_process">Service not available.Please try later</string>
     <string name="an_error_occured">An error Occured</string>
     <string name="internal_server_error">The server failed to fulfill an apparently valid request.</string>
     <string name="toastResponseTimeout">Response Timeout Error</string>
@@ -19,7 +20,7 @@
     <string name="unknown_error_kind">Unknown error kind:</string>
     <string name="toastServerFailedRespond">Server failed to fulfill request</string>
     <string name="toastConnectionFailed">Connection to server failed</string>
-    <string name="forbidden">Forbidden,you do not have permission to access on server</string>
+    <string name="forbidden">Your Email id is not verified. Please verify</string>
     <!--<string name="unauthorized_user">Your login session is invalid due to one or more reasons. Please log in again in order to proceed.</string>-->
     <string name="unauthorized_user">Unauthorized: Access is denied due to invalid credentials.</string>
     <string name="toastAlreadyExist">Alreadt Exist</string>

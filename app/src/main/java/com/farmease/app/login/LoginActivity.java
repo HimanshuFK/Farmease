@@ -5,10 +5,14 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
@@ -18,13 +22,18 @@ import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginBehavior;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.farmease.app.HomeActivity;
 import com.farmease.app.R;
+import com.farmease.app.activity.ForgetPasswordActivity;
+import com.farmease.app.activity.OtpActivity;
+import com.farmease.app.bean.BeanLogin;
 import com.farmease.app.network.RetrofitErrorHandler;
 import com.farmease.app.network.RetrofitFactory;
+import com.farmease.app.services.APIService;
 import com.farmease.app.utility.Constants;
 import com.farmease.app.utility.CustomProgressBar;
 import com.farmease.app.utility.Utility;
@@ -61,7 +70,20 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     EditText edtPassword;
     @BindView(R.id.btn_login)
     Button btnLogin;
+    @BindView(R.id.btn_signup)
+    Button btnSignup;
+    @BindView(R.id.txt_forgetpassword)
+    TextView txtForgetPass;
+    @BindView(R.id.txt_skip)
+    TextView txtSkip;
+    @BindView(R.id.layout_fb)
+    FrameLayout layoutFb;
+    @BindView(R.id.layout_gmail)
+    FrameLayout layoutGmail;
+    @BindView(R.id.img_showPassword)
+    ImageView imgShowPassword;
     private Unbinder unbinder;
+    private boolean showPass = true;
     private CustomProgressBar progressBar;
     private GoogleApiClient googleApiClient;
     private CallbackManager callbackManager;
@@ -76,14 +98,21 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         //AppEventsLogger.activateApp(getApplicationContext());
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+
         setContentView(R.layout.activity_login);
         unbinder = ButterKnife.bind(this);
         callbackManager = CallbackManager.Factory.create();
         fbBtn.setReadPermissions("email");
         signin_google.setOnClickListener(this);
+        txtSkip.setOnClickListener(this);
         fbBtn.setOnClickListener(this);
+        imgShowPassword.setOnClickListener(this);
+        layoutFb.setOnClickListener(this);
+        layoutGmail.setOnClickListener(this);
+        btnSignup.setOnClickListener(this);
+        txtForgetPass.setOnClickListener(this);
         progressBar = CustomProgressBar.getInstance();
-        facebookLogin();
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -95,7 +124,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                userSignIn();
+                final String email = edtEmail.getText().toString().trim();
+                final String password = edtPassword.getText().toString().trim();
+                if (!Utility.isValidEmail(email)) {
+                    edtEmail.setError("Invalid email");
+                } else if (password.length() == 0) {
+                    edtPassword.setError("Password Required");
+                } else {
+                    userSignIn(email, password);
+                }
+
             }
         });
 
@@ -103,6 +141,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     //for google signin
     private void signIn() {
+        progressBar.showProgress(LoginActivity.this);
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -122,12 +161,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
             Utility.savePref(LoginActivity.this, Constants.username, personName);
             Utility.savePref(LoginActivity.this, Constants.useremail, email);
+            Utility.saveBooleanDataTosharedPrefences(LoginActivity.this, Constants.LOGIN, true);
 
             Log.e(TAG, "Name: " + personName + ", email: " + email
                     + ", Image: " + personPhotoUrl);
 
-            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+            userGmailSignin(email);
 
+            finish();
         } else {
             // Signed out, show unauthenticated UI.
 
@@ -138,7 +179,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        // BeanLogin returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
@@ -152,32 +193,29 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
     }
 
-    private void userSignIn() {
-
-        progressBar.showProgress(LoginActivity.this);
-
-        final String email = edtEmail.getText().toString().trim();
-        final String password = edtPassword.getText().toString().trim();
+    private void userGmailSignin(final String email) {
 
         Retrofit retrofit = RetrofitFactory.getInstance();
         APIService service = retrofit.create(APIService.class);
 
-        Call<Result> call = service.userLogin(email, password);
+        Call<BeanLogin> call = service.userGmail(email);
 
-        call.enqueue(new Callback<Result>() {
+        call.enqueue(new Callback<BeanLogin>() {
             @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
+            public void onResponse(Call<BeanLogin> call, Response<BeanLogin> response) {
                 progressBar.hideProgress();
-                Log.e("values", "" + email + password);
                 if (response.isSuccessful()) {
                     finish();
                     Log.e("token", response.body().getResult().getToken());
                     Utility.savePref(LoginActivity.this, Constants.token, response.body().getResult().getToken());
+                    Utility.savePref(LoginActivity.this, Constants.login_type, "gmail");
                     Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    Utility.saveBooleanDataTosharedPrefences(LoginActivity.this, Constants.LOGIN, true);
                     //SharedPrefManager.getInstance(getApplicationContext()).userLogin(response.body().getUser());
                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                 } else {
                     int statusCode = response.code();
+
                     RetrofitErrorHandler errorHandler = new RetrofitErrorHandler(LoginActivity.this);
                     errorHandler.responseOnError(statusCode);
                     // Toast.makeText(getApplicationContext(), "Invalid email or password", Toast.LENGTH_LONG).show();
@@ -185,7 +223,48 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
 
             @Override
-            public void onFailure(Call<Result> call, Throwable t) {
+            public void onFailure(Call<BeanLogin> call, Throwable t) {
+                progressBar.hideProgress();
+                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void userSignIn(final String email, final String password) {
+
+        progressBar.showProgress(LoginActivity.this);
+
+
+        Retrofit retrofit = RetrofitFactory.getInstance();
+        APIService service = retrofit.create(APIService.class);
+
+        Call<BeanLogin> call = service.userLogin(email, password);
+
+        call.enqueue(new Callback<BeanLogin>() {
+            @Override
+            public void onResponse(Call<BeanLogin> call, Response<BeanLogin> response) {
+                progressBar.hideProgress();
+                Log.e("values", "" + email + password);
+                if (response.isSuccessful()) {
+                    finish();
+                    Log.e("token", response.body().getResult().getToken());
+                    Utility.savePref(LoginActivity.this, Constants.login_type, "manual");
+                    Utility.savePref(LoginActivity.this, Constants.token, response.body().getResult().getToken());
+                    Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    Utility.saveBooleanDataTosharedPrefences(LoginActivity.this, Constants.LOGIN, true);
+                    //SharedPrefManager.getInstance(getApplicationContext()).userLogin(response.body().getUser());
+                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                } else {
+                    int statusCode = response.code();
+
+                    RetrofitErrorHandler errorHandler = new RetrofitErrorHandler(LoginActivity.this);
+                    errorHandler.responseOnError(statusCode);
+                    // Toast.makeText(getApplicationContext(), "Invalid email or password", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BeanLogin> call, Throwable t) {
                 progressBar.hideProgress();
                 Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
             }
@@ -193,6 +272,45 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     //fb login
+
+    private void userFBSignin(final String fbId) {
+
+        progressBar.showProgress(LoginActivity.this);
+
+        Retrofit retrofit = RetrofitFactory.getInstance();
+        APIService service = retrofit.create(APIService.class);
+
+        Call<BeanLogin> call = service.userFB(fbId);
+
+        call.enqueue(new Callback<BeanLogin>() {
+            @Override
+            public void onResponse(Call<BeanLogin> call, Response<BeanLogin> response) {
+                progressBar.hideProgress();
+                if (response.isSuccessful()) {
+                    finish();
+                    Log.e("token", response.body().getResult().getToken());
+                    Utility.savePref(LoginActivity.this, Constants.login_type, "fb");
+                    Utility.savePref(LoginActivity.this, Constants.token, response.body().getResult().getToken());
+                    Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    Utility.saveBooleanDataTosharedPrefences(LoginActivity.this, Constants.LOGIN, true);
+                    //SharedPrefManager.getInstance(getApplicationContext()).userLogin(response.body().getUser());
+                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                } else {
+                    int statusCode = response.code();
+
+                    RetrofitErrorHandler errorHandler = new RetrofitErrorHandler(LoginActivity.this);
+                    errorHandler.responseOnError(statusCode);
+                    // Toast.makeText(getApplicationContext(), "Invalid email or password", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BeanLogin> call, Throwable t) {
+                progressBar.hideProgress();
+                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
     private void facebookLogin() {
 
@@ -213,6 +331,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                     JSONObject picture = object.getJSONObject("picture").getJSONObject("data");
                                     String pictureUrl = picture.getString("url");
                                     String name = fName + " " + lName;
+                                    userFBSignin(id);
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -221,7 +340,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         });
 
                 Bundle parameters = new Bundle();
-                parameters.putString("fields", "id,first_name,last_name,email,picture.type(large),birthday");
+                parameters.putString("fields", "id,first_name,last_name,email,picture.type(large)");
                 request.setParameters(parameters);
                 request.executeAsync();
             }
@@ -242,14 +361,40 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.signin_google:
+            case R.id.layout_gmail:
                 signIn();
                 break;
-
-            case R.id.login_button:
-                LoginManager.getInstance().logOut();
-                LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email", "user_birthday"));
+            case R.id.layout_fb:
+               // LoginManager.getInstance().logOut();
+                LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
+                facebookLogin();
                 break;
+            case R.id.btn_signup:
+                startActivity(new Intent(LoginActivity.this, SignupActivity.class));
+                break;
+            case R.id.txt_forgetpassword:
+                startActivity(new Intent(LoginActivity.this, ForgetPasswordActivity.class));
+                break;
+            case R.id.txt_skip:
+                startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                break;
+            case R.id.img_showPassword:
+                int start,end;
+                if (showPass) {
+                    start=edtPassword.getSelectionStart();
+                    end=edtPassword.getSelectionEnd();
+                    edtPassword.setTransformationMethod(null);
+                    edtPassword.setSelection(start,end);
+                    showPass=false;
+                }else {
+                    start=edtPassword.getSelectionStart();
+                    end=edtPassword.getSelectionEnd();
+                    edtPassword.setTransformationMethod(new PasswordTransformationMethod());
+                    showPass=true;
+                    edtPassword.setSelection(start,end);
+                }
+                break;
+
         }
     }
 

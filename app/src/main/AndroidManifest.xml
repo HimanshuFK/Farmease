@@ -8,6 +8,8 @@
 
     <uses-feature android:name="android.hardware.location.gps" />
 
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <application
         android:name=".app.AppApplication"
         android:allowBackup="false"
@@ -47,10 +49,15 @@
         <activity
             android:name=".HomeActivity"
             android:label="@string/title_activity_home" />
-        <activity android:name=".activity.MyAccountActivity"></activity>
-        <activity android:name=".activity.VideoPlayerActivity">
-
-        </activity>
+        <activity android:name=".activity.MyAccountActivity" />
+        <activity android:name=".activity.VideoPlayerActivity" />
+        <activity android:name=".activity.SubCategoryActivity" />
+        <activity android:name=".activity.ProductActivity" />
+        <activity android:name=".login.SignupActivity" />
+        <activity android:name=".activity.ChangePasswordActivity" />
+        <activity android:name=".activity.ForgetPasswordActivity" />
+        <activity android:name=".activity.OtpActivity" />
+        <activity android:name=".activity.ProductReviewsActivity"></activity>
     </application>
 
 </manifest>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.SubCategoryActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:background="#aa000000"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapse_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_150sdp"
+            android:fitsSystemWindows="true"
+            android:paddingBottom="2dip"
+            app:collapsedTitleGravity="top|center_vertical"
+            app:contentScrim="@color/colorPrimaryDark"
+            app:expandedTitleTextAppearance="@style/CollapsedAppBar"
+            app:collapsedTitleTextAppearance="@style/CollapsedAppBar"
+            app:expandedTitleMarginTop="@dimen/_11sdp"
+            app:expandedTitleGravity="center|center_horizontal"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_150sdp"
+                android:id="@+id/img_category"
+                android:padding="@dimen/_15sdp"
+                android:src="@mipmap/ic_harvestor"/>
+
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/htab_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_gravity="top"
+                android:layout_marginBottom="@dimen/_48sdp"
+                app:contentInsetStart="0dp"
+                app:titleMarginTop="@dimen/_8sdp"
+                app:layout_collapseMode="pin">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp">
+
+                <ImageView
+                    android:id="@+id/backimg"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:padding="@dimen/_10sdp"
+                    android:src="@drawable/back" />
+                <ImageView
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:src="@mipmap/filter"
+                    android:id="@+id/img_filter"
+                    android:padding="@dimen/_10sdp"
+                    android:layout_alignParentRight="true"/>
+
+                 <TextView
+                     android:id="@+id/txt_categoryname"
+                     android:layout_width="match_parent"
+                     android:layout_height="match_parent"
+                     android:gravity="left"
+                     android:paddingLeft="@dimen/_40sdp"
+                     android:paddingTop="@dimen/_10sdp"
+                     android:text="Post Harvest"
+                     android:textColor="@color/white"
+                     android:textSize="@dimen/_14sdp" />
+                </RelativeLayout>
+            </android.support.v7.widget.Toolbar>
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                app:tabTextColor="@color/backgroundcolor"
+                app:tabMode="scrollable"
+                app:tabIndicatorColor="@color/grey"
+                app:tabSelectedTextColor="@color/white"
+                app:tabGravity="fill" />
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tab_layout"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+</android.support.design.widget.CoordinatorLayout>

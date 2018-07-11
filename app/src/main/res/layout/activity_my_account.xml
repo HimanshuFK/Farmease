@@ -3,17 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/backgroundcolor"
     tools:context=".activity.MyAccountActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:id="@+id/toolbar"
+        android:background="@color/colorPrimary"
         android:layout_height="@dimen/_40sdp">
 
         <ImageView
             android:layout_width="@dimen/_40sdp"
             android:layout_height="match_parent"
-            android:src="@mipmap/ic_back"
+            android:src="@drawable/back"
             android:id="@+id/imgback"
             android:padding="@dimen/_8sdp"/>
 
@@ -22,8 +24,11 @@
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
             android:text="My Account"
+            android:textColor="@color/white"
             android:textSize="@dimen/_14sdp"
             android:gravity="center"/>
+
+
     </RelativeLayout>
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -35,10 +40,25 @@
         android:id="@+id/user_image"
         android:layout_marginTop="@dimen/_20sdp" />
 
+    <ImageView
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_below="@+id/user_image"
+        android:src="@drawable/edit"
+        android:layout_alignParentRight="true"
+        android:id="@+id/imgedit"
+        android:padding="@dimen/_8sdp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+        android:layout_below="@+id/imgedit"
+        android:background="@color/grey"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/user_image"
+        android:layout_below="@+id/imgedit"
         android:id="@+id/user_name"
         android:layout_marginTop="@dimen/_20sdp"
         android:padding="@dimen/_10sdp"/>
@@ -50,5 +70,20 @@
         android:padding="@dimen/_10sdp"
         android:layout_below="@+id/user_name"
         />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+        android:layout_above="@+id/txt_changepassword"
+        android:background="@color/grey"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Change Password"
+        android:textSize="@dimen/_15sdp"
+        android:id="@+id/txt_changepassword"
+        android:padding="@dimen/_10sdp"/>
 
 </RelativeLayout>

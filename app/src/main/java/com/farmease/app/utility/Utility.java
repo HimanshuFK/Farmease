@@ -1,5 +1,6 @@
 package com.farmease.app.utility;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -14,7 +15,9 @@ import android.graphics.Matrix;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Patterns;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
@@ -77,7 +80,7 @@ public class Utility {
     }
 
     public static String getDeviceId(Context context) {
-        String deviceId = ((TelephonyManager) context
+        @SuppressLint("MissingPermission") String deviceId = ((TelephonyManager) context
                 .getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
 
 		/*
@@ -145,11 +148,6 @@ public class Utility {
         activity.startActivity(intent);
     }
 
-    /**
-     * function definiton for share the application
-     *
-     * @param
-     */
     public static void shareListUrl(Context ctx) {
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setType("text/plain");
@@ -198,14 +196,6 @@ public class Utility {
         return dateStr.toString();
     }
 
-    /**
-     * This method is help to save the data in local sharedPrefences(Local data
-     * file) <br>
-     * public static void saveDataLocally(Context mContext, String key, String
-     * data)
-     *
-     * @param
-     */
     public static void saveintegerDataTosharedPrefences(Context mContext,
                                                         String key, int data) {
         final String PREFS_NAME = "ItemCountDetails";
@@ -216,10 +206,6 @@ public class Utility {
         editor.commit();
     }
 
-    /**
-     * This method gives the saved data from local SharedPreferences File by
-     * just Send context and the key name of the data
-     */
     public static int getIntergerDataFromsharedPrefences(Context mContext,
                                                          String key) {
         final String PREFS_NAME = "ItemCountDetails";
@@ -230,14 +216,6 @@ public class Utility {
 
     }
 
-    /**
-     * This method is help to save the data in local sharedPrefences(Local data
-     * file) <br>
-     * public static void saveDataLocally(Context mContext, String key, String
-     * data)
-     *
-     * @param
-     */
     public static void saveBooleanDataTosharedPrefences(Context mContext,
                                                         String key, boolean data) {
         final String PREFS_NAME = "IsFirstRun";
@@ -248,15 +226,11 @@ public class Utility {
         editor.commit();
     }
 
-    /**
-     * This method gives the saved data from local SharedPreferences File by
-     * just Send context and the key name of the data
-     */
     public static boolean getBooleanDataFromsharedPrefences(Context mContext, String key) {
         final String PREFS_NAME = "IsFirstRun";
         final SharedPreferences ToolsAppData = mContext.getSharedPreferences(
                 PREFS_NAME, 0);
-        final boolean preData = ToolsAppData.getBoolean(key, true);
+        final boolean preData = ToolsAppData.getBoolean(key, false);
         return preData;
 
     }
@@ -302,5 +276,19 @@ public class Utility {
             e.getMessage();
             return null;
         }
+    }
+    public static boolean isValidEmail(CharSequence target) {
+
+        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
+    }
+
+    public static boolean isValidEmailorNumber(CharSequence target) {
+        if(!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches()){
+            return true;
+        }else {
+
+            return true;
+        }
+
     }
 }

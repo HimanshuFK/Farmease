@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundcolor"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_150sdp"
+                android:id="@+id/layout_pager"
+                android:layout_margin="@dimen/_7sdp"
+                android:layout_below="@+id/toolbar">
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/pager"
+                    android:padding="@dimen/_2sdp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent" />
+
+                 <me.relex.circleindicator.CircleIndicator
+                     android:id="@+id/indicator"
+                     android:layout_width="fill_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_alignParentBottom="true"
+                     android:layout_centerHorizontal="true"
+                     android:gravity="center"
+                     android:padding="10dip" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_5sdp"
+                android:layout_below="@+id/layout_pager"
+                android:text="Recently Added"
+                android:id="@+id/txt_recentadd"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:id="@+id/txt_seeall"
+                android:textColor="@color/grey"
+                android:paddingRight="@dimen/_4sdp"
+                android:text="View all"
+                android:layout_toLeftOf="@+id/rightarrow"
+                android:layout_below="@+id/layout_pager"/>
+
+            <ImageView
+                android:layout_width="@dimen/_10sdp"
+                android:layout_height="@dimen/_10sdp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="@dimen/_11sdp"
+                android:id="@+id/rightarrow"
+                android:layout_marginRight="@dimen/_5sdp"
+                android:layout_below="@+id/layout_pager"
+                android:src="@drawable/right_arrow"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerview_recentadd"
+                android:layout_below="@+id/txt_recentadd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_5sdp"
+                android:text="Trending Products"
+                android:id="@+id/txt_toprate"
+                android:layout_below="@+id/recyclerview_recentadd"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:id="@+id/txt_seealltop"
+                android:paddingRight="@dimen/_4sdp"
+                android:textColor="@color/grey"
+                android:text="View all"
+                android:layout_toLeftOf="@+id/rightarrow"
+                android:layout_below="@+id/recyclerview_recentadd"/>
+
+            <ImageView
+                android:layout_width="@dimen/_10sdp"
+                android:layout_height="@dimen/_10sdp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="@dimen/_11sdp"
+                android:id="@+id/rightarrowtop"
+                android:layout_marginRight="@dimen/_5sdp"
+                android:layout_below="@+id/recyclerview_recentadd"
+                android:src="@drawable/right_arrow"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerview_TopRating"
+                android:layout_width="match_parent"
+                android:layout_below="@+id/txt_toprate"
+                android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</LinearLayout>

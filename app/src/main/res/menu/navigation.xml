@@ -12,8 +12,13 @@
         android:title="@string/title_dashboard" />
 
     <item
+        android:id="@+id/navigation_czrt"
+        android:icon="@drawable/cart"
+        android:title="Cart" />
+
+    <item
         android:id="@+id/navigation_notifications"
-        android:icon="@drawable/ic_notifications_black_24dp"
+        android:icon="@drawable/user"
         android:title="@string/title_notifications" />
 
 </menu>

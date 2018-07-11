@@ -7,7 +7,7 @@
     <color name="white">#ffffff</color>
     <color name="indicatorcolor">#3191CC</color>
     <color name="grey">#646464</color>
-    <color name="textcolor">#6B6B6B</color>
+    <color name="lightgrey">#6B6B6B</color>
     <color name="barColor">#000000</color>
     <color name="color_selected_tab">#cccccc</color>
     <color name="colorTransparent">#00000000</color>
@@ -17,4 +17,6 @@
     <color name="color_layout_more">#E0E0E0</color>
     <color name="color_red">#e53935</color>
     <color name="transparent">#00FFFFFF</color>
+    <color name="backgroundcolor">#eaeaea</color>
+    <color name="fbBack">#3b5998</color>
 </resources>

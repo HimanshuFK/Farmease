@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@color/backgroundcolor"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Good Morning"
+        android:gravity="center"
+        android:id="@+id/txt_mrn"
+        android:textSize="@dimen/_30sdp"
+        android:textColor="@color/colorPrimary"
+        android:layout_marginTop="@dimen/_30sdp"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="@dimen/_80sdp"
+        android:layout_height="@dimen/_80sdp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/txt_mrn"
+        android:src="@drawable/com_facebook_profile_picture_blank_portrait"
+        android:id="@+id/user_image"
+        android:layout_marginTop="@dimen/_20sdp" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+        android:background="@color/grey"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_below="@+id/user_image"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user_image"
+        android:layout_marginTop="@dimen/_11sdp"
+        android:padding="@dimen/_10sdp"
+        android:id="@+id/txt_account"
+        android:textSize="@dimen/_14sdp"
+        android:text="My Account"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_account"
+        android:padding="@dimen/_10sdp"
+        android:textSize="@dimen/_14sdp"
+        android:id="@+id/txt_order"
+        android:text="My Orders"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_order"
+        android:padding="@dimen/_10sdp"
+        android:textSize="@dimen/_14sdp"
+        android:text="My Addresses"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+        android:background="@color/grey"
+        android:layout_above="@+id/txt_signout"
+        android:layout_marginTop="@dimen/_10sdp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="@dimen/_10sdp"
+        android:gravity="center"
+        android:id="@+id/txt_signout"
+        android:textSize="@dimen/_14sdp"
+        android:text="Sign Out"/>
+</RelativeLayout>

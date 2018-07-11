@@ -9,8 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.farmease.app.R;
 import com.farmease.app.activity.VideoPlayerActivity;
+import com.farmease.app.model.Banner;
+import com.farmease.app.utility.Constants;
 
 import java.util.ArrayList;
 
@@ -18,12 +21,12 @@ import java.util.ArrayList;
 public class SlideImageAdapter extends PagerAdapter {
 
 
-    private ArrayList<Integer> IMAGES;
+    private ArrayList<Banner> IMAGES;
     private LayoutInflater inflater;
     private Context context;
 
 
-    public SlideImageAdapter(Context context,ArrayList<Integer> IMAGES) {
+    public SlideImageAdapter(Context context,ArrayList<Banner> IMAGES) {
         this.context = context;
         this.IMAGES=IMAGES;
         inflater = LayoutInflater.from(context);
@@ -56,8 +59,9 @@ public class SlideImageAdapter extends PagerAdapter {
             });
         }
 
+        Glide.with(context).load(IMAGES.get(position).getBanner_image()).into(imageView);
 
-        imageView.setImageResource(IMAGES.get(position));
+
 
         view.addView(imageLayout, 0);
 

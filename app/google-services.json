@@ -15,16 +15,12 @@
       },
       "oauth_client": [
         {
-          "client_id": "841257800892-voilrmmje5gnv39p6iits549ko9vh0eu.apps.googleusercontent.com",
+          "client_id": "841257800892-3rvj1nj18rb8s5fe45uerm7lhomm1a9s.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.farmease.app",
-            "certificate_hash": "ddabed470315c2ca4da5959617ca204da01c1e09"
+            "certificate_hash": "c4aaa89f8502beb512512c02efe31d466e15949a"
           }
-        },
-        {
-          "client_id": "841257800892-1am2lbuq4c9ar1kjr4r2pe1ja7333ojr.apps.googleusercontent.com",
-          "client_type": 3
         },
         {
           "client_id": "841257800892-1am2lbuq4c9ar1kjr4r2pe1ja7333ojr.apps.googleusercontent.com",

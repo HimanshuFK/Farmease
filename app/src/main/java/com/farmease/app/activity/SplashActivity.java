@@ -10,8 +10,11 @@ import android.widget.TextView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.farmease.app.HomeActivity;
 import com.farmease.app.R;
 import com.farmease.app.login.LoginActivity;
+import com.farmease.app.utility.Constants;
+import com.farmease.app.utility.Utility;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,8 +40,14 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                finish();
+                if (Utility.getBooleanDataFromsharedPrefences(SplashActivity.this, Constants.LOGIN)){
+                    startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+                    finish();
+                }else {
+                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                    finish();
+                }
+
             }
         },5000);
 

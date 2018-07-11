@@ -66,7 +66,7 @@ public class LocationSearchActivity extends AppCompatActivity implements Placeau
                     adapter.getFilter().filter(s.toString());
                     // Toast.makeText(mContext, "No Results Found", Toast.LENGTH_SHORT).show();
                 } else  {
-                    // Toast.makeText(mContext, "No Result Found", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(mContext, "No BeanLogin Found", Toast.LENGTH_SHORT).show();
 //                    Toast.makeText(getApplicationContext(), Constant.API_NOT_CONNECTED, Toast.LENGTH_SHORT).show();
                     Log.e("", "NOT CONNECTED");
                 }

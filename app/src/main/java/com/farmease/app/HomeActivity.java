@@ -14,6 +14,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -21,10 +24,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.farmease.app.activity.MyAccountActivity;
+import com.farmease.app.adapter.HomeAdapter;
 import com.farmease.app.adapter.SlideImageAdapter;
+import com.farmease.app.fragment.FragmentAccount;
+import com.farmease.app.fragment.FragmentCategory;
+import com.farmease.app.fragment.FragmentHome;
+import com.farmease.app.helper.BottomNavigationViewHelper;
 import com.farmease.app.location.LocationSearchActivity;
+import com.farmease.app.model.Home;
+import com.farmease.app.utility.Constants;
+import com.farmease.app.utility.Utility;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -52,22 +64,19 @@ import butterknife.Unbinder;
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
-    private TextView mTextMessage;
     @BindView(R.id.txt_searchlocation)
     TextView tvSelectLocation;
     @BindView(R.id.img_search)
     ImageView img_search;
-    @BindView(R.id.pager)
-    ViewPager viewPager;
+    @BindView(R.id.txt_category)
+    TextView txt_category;
     private Unbinder unbinder;
     private final static int REQUEST_CHECK_SETTINGS_GPS=0x1;
     private final static int REQUEST_ID_MULTIPLE_PERMISSIONS=0x2;
     private Location mCurrentLocation;
     GoogleApiClient mGoogleApiClient;
-    private Integer[] IMAGES= {R.drawable.splash_bg,R.drawable.splash_bg};
-    private ArrayList<Integer> ImagesArray = new ArrayList<Integer>();
-    private int currentPage = 0;
-    private int NUM_PAGES = 0;
+
+    private Fragment fragment;
 
     //bottom navigation drawer
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -77,14 +86,33 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
+                    if (!(fragment instanceof FragmentHome)) {
+                        fragment = new FragmentHome();
+                        txt_category.setVisibility(View.GONE);
+                        tvSelectLocation.setVisibility(View.VISIBLE);
+                        start_fragment(fragment);
+                    }
                     return true;
                 case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
+                    if (!(fragment instanceof FragmentCategory)) {
+                        fragment = new FragmentCategory();
+                        txt_category.setText("Category");
+                        txt_category.setVisibility(View.VISIBLE);
+                        tvSelectLocation.setVisibility(View.GONE);
+                        start_fragment(fragment);
+                    }
+                    return true;
+                case R.id.navigation_czrt:
+                    Toast.makeText(HomeActivity.this, "Coming Soon..", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.navigation_notifications:
-                   // mTextMessage.setText(R.string.title_notifications);
-                    startActivity(new Intent(HomeActivity.this, MyAccountActivity.class));
+                    if (!(fragment instanceof FragmentAccount)) {
+                        fragment = new FragmentAccount();
+                        txt_category.setText("My Profile");
+                        txt_category.setVisibility(View.VISIBLE);
+                        tvSelectLocation.setVisibility(View.GONE);
+                        start_fragment(fragment);
+                    }
                     return true;
             }
             return false;
@@ -107,73 +135,23 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
         unbinder = ButterKnife.bind(this);
         tvSelectLocation.setOnClickListener(this);
-
-        init();
-        mTextMessage = (TextView) findViewById(R.id.message);
+        if (!(fragment instanceof FragmentHome)) {
+            fragment = new FragmentHome();
+            start_fragment(fragment);
+        }
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        BottomNavigationViewHelper.disableShiftMode(navigation);
     }
 
-    private void init() {
-        for(int i=0;i<IMAGES.length;i++)
-            ImagesArray.add(IMAGES[i]);
+    private void start_fragment(Fragment frag) {
 
-        viewPager.setAdapter(new SlideImageAdapter(HomeActivity.this,ImagesArray));
-
-
-        /*CirclePageIndicator indicator = (CirclePageIndicator)
-                findViewById(R.id.indicator);
-
-        indicator.setViewPager(mPager);
-
-        final float density = getResources().getDisplayMetrics().density;
-
-//Set circle indicator radius
-        indicator.setRadius(5 * density);
-
-        NUM_PAGES =IMAGES.length;*/
-
-        // Auto start of viewpager
-        final Handler handler = new Handler();
-        final Runnable Update = new Runnable() {
-
-            public void run() {
-                currentPage++;
-                if (currentPage == NUM_PAGES) {
-                    currentPage = 0;
-                }
-                viewPager.setCurrentItem(currentPage++, true);
-            }
-        };
-        Timer swipeTimer = new Timer();
-        swipeTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                handler.post(Update);
-            }
-        }, 3000, 3000);
-
-        // Pager listener over indicator
-       /* indicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            @Override
-            public void onPageSelected(int position) {
-                currentPage = position;
-
-            }
-
-            @Override
-            public void onPageScrolled(int pos, float arg1, int arg2) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int pos) {
-
-            }
-        });*/
-
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.replace(R.id.activity_content, frag);
+        fragmentTransaction.commit();
     }
+
 
     private void getMyLocation(){
         if(mGoogleApiClient!=null) {
@@ -338,6 +316,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             try {
                 tvSelectLocation.setText(
                         getAddress(mCurrentLocation.getLatitude() ,mCurrentLocation.getLongitude()));
+                Utility.savePref(HomeActivity.this, Constants.lat, String.valueOf(mCurrentLocation.getLatitude()));
+                Utility.savePref(HomeActivity.this,Constants.lng, String.valueOf(mCurrentLocation.getLongitude()));
             } catch (IOException e) {
                 e.printStackTrace();
             }

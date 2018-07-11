@@ -17,13 +17,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Select Location"
-            android:paddingTop="@dimen/_5sdp"
-            android:paddingRight="@dimen/_17sdp"
-            android:paddingLeft="@dimen/_17sdp"
-            android:paddingBottom="@dimen/_5sdp"
-            android:background="@drawable/rectangle_background"
-            android:textColor="#000"
+            android:paddingTop="@dimen/_3sdp"
+            android:paddingRight="@dimen/_14sdp"
+            android:paddingLeft="@dimen/_14sdp"
+            android:paddingBottom="@dimen/_3sdp"
+            android:textColor="@color/white"
             android:id="@+id/txt_searchlocation"
+            android:textSize="@dimen/_17sdp"
+            android:gravity="center"
+            android:layout_marginLeft="@dimen/_20sdp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Category"
+            android:paddingTop="@dimen/_3sdp"
+            android:paddingRight="@dimen/_14sdp"
+            android:paddingLeft="@dimen/_14sdp"
+            android:paddingBottom="@dimen/_3sdp"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            android:id="@+id/txt_category"
             android:textSize="@dimen/_17sdp"
             android:gravity="center"
             android:layout_marginLeft="@dimen/_20sdp"/>
@@ -31,50 +45,36 @@
         <ImageView
             android:layout_width="@dimen/_40sdp"
             android:layout_height="match_parent"
-            android:src="@drawable/places_ic_search"
-            android:padding="@dimen/_5sdp"
+            android:src="@mipmap/search"
+            android:padding="@dimen/_11sdp"
             android:id="@+id/img_search"
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/_15sdp"/>
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:layout_height="@dimen/_170sdp" >
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"/>
-
-       <!-- <com.viewpagerindicator.CirclePageIndicator
-            android:id="@+id/indicator"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:gravity="bottom"
-            android:padding="10dip"
-            app:centered="true"
-            app:fillColor="#ff0099"
-            app:pageColor="#FF0000"
-            app:snap="false" />-->
-    </RelativeLayout>
+   <FrameLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:layout_below="@+id/toolbar"
+       android:id="@+id/activity_content"
+       android:layout_above="@+id/navigation"
+       ></FrameLayout>
 
     <TextView
         android:id="@+id/message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/title_home"
+        android:visibility="gone"
        android:layout_centerInParent="true"
         />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/_42sdp"
+
         android:layout_alignParentBottom="true"
         android:background="?android:attr/windowBackground"
         app:menu="@menu/navigation" />

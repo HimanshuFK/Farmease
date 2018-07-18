@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,9 +25,15 @@ import com.farmease.app.model.Product;
 import com.farmease.app.network.RetrofitErrorHandler;
 import com.farmease.app.network.RetrofitFactory;
 import com.farmease.app.services.APIService;
+import com.farmease.app.utility.AppToast;
 import com.farmease.app.utility.ClickListener;
+import com.farmease.app.utility.Utility;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -72,9 +79,13 @@ public class ProductActivity extends AppCompatActivity implements View.OnClickLi
     TextView txtOldPrice;
     @BindView(R.id.txt_newprice)
     TextView txtNewPrice;
+    @BindView(R.id.btn_proceed)
+    Button btnProceed;
     private TextView txtDescribe;
     @BindView(R.id.layout_review_main)
     RelativeLayout layoutReview;
+    @BindView(R.id.txt_date)
+    TextView txtDate;
     private Unbinder unbinder;
     private Product mDataList;
     private Integer[] IMAGES = {R.drawable.bannernew, R.drawable.bannernew, R.drawable.bannernew, R.drawable.bannernew};
@@ -96,10 +107,15 @@ public class ProductActivity extends AppCompatActivity implements View.OnClickLi
         rcView_similiar.setHasFixedSize(true);
         rcView_similiar.setLayoutManager(new LinearLayoutManager(ProductActivity.this, LinearLayoutManager.HORIZONTAL, false));
 
-        txtProName.setText(getIntent().getExtras().getString("pro_name"));
-        txt_categoryname.setText(getIntent().getExtras().getString("name"));
-        getProduct(getIntent().getExtras().getInt("id"));
+        txtProName.setText(getIntent().getExtras().getString("name"));
+        if (Utility.isInternetConnected(ProductActivity.this)){
+            getProduct(getIntent().getExtras().getInt("id"));
+        }else {
+            AppToast.showToast(ProductActivity.this,"No Internet Found",Toast.LENGTH_SHORT);
+        }
+
         img_back.setOnClickListener(this);
+        btnProceed.setOnClickListener(this);
         txtReadMore.setOnClickListener(this);
         layout_description.setOnClickListener(this);
     }
@@ -189,10 +205,23 @@ public class ProductActivity extends AppCompatActivity implements View.OnClickLi
                         txtNewPrice.setVisibility(View.GONE);
                     }
                     describe=mDataList.getDescription();
-                    if (mDataList.getReviews()!=null){
+                    if (mDataList.getReviews().getFirst_name()!=null){
 
                         txtReviewName.setText(mDataList.getReviews().getFirst_name()+" "+mDataList.getReviews().getLast_name());
                         txtReview.setText(mDataList.getReviews().getReview());
+                        txt_categoryname.setText(mDataList.getReviews().getCategory_name());
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'.000Z'");
+                        SimpleDateFormat output = new SimpleDateFormat("MMMM dd, yyyy", Locale.ENGLISH);
+                        try {
+                            if (mDataList.getReviews().getCreated_at()!=null){
+                                Date date = format.parse(mDataList.getReviews().getCreated_at());
+                                txtDate.setText(output.format(date));
+                            }
+
+
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
 
                     }else {
                         layoutReview.setVisibility(View.GONE);
@@ -258,11 +287,24 @@ public class ProductActivity extends AppCompatActivity implements View.OnClickLi
                 intent.putExtra("id",getIntent().getExtras().getInt("id"));
                 startActivity(intent);
                 break;
+            case R.id.btn_proceed:
+                Intent intent1 = new Intent(ProductActivity.this,ProductConfirmActivity.class);
+                intent1.putExtra("pro_name",mDataList.getName());
+                intent1.putExtra("perHourRate",mDataList.getPer_hour_rate());
+                intent1.putExtra("tractor_cost",mDataList.getTractor_cost());
+                intent1.putExtra("operator_cost",mDataList.getOperator_cost());
+                intent1.putExtra("id",getIntent().getExtras().getInt("id"));
+                startActivity(intent1);
+                break;
         }
     }
 
     @Override
     public void itemClicked(View view, int position) {
 
+        Intent intent=new Intent(ProductActivity.this,ProductActivity.class);
+        intent.putExtra("id",mDataList.getId());
+        intent.putExtra("pro_name",mDataList.getName());
+        startActivity(intent);
     }
 }

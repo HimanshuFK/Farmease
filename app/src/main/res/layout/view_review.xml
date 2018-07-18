@@ -39,7 +39,8 @@
                 android:layout_below="@+id/txt_reviewname"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:layout_toRightOf="@+id/user_review_img"
-                android:text="July,2018"
+                android:text=""
+                android:id="@+id/txt_date"
                 android:textSize="@dimen/_14sdp" />
 
             <TextView

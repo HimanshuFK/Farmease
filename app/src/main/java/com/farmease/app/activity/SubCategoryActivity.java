@@ -33,7 +33,9 @@ import com.farmease.app.model.SubCategory;
 import com.farmease.app.network.RetrofitErrorHandler;
 import com.farmease.app.network.RetrofitFactory;
 import com.farmease.app.services.APIService;
+import com.farmease.app.utility.AppToast;
 import com.farmease.app.utility.CustomProgressBar;
+import com.farmease.app.utility.Utility;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -78,7 +80,12 @@ public class SubCategoryActivity extends AppCompatActivity {
         mDataList = new ArrayList<>();
 
 
-        getSubCategory(getIntent().getExtras().getInt("cat_id"));
+        if (Utility.isInternetConnected(SubCategoryActivity.this)){
+            getSubCategory(getIntent().getExtras().getInt("cat_id"));
+        }else {
+            AppToast.showToast(SubCategoryActivity.this,"No Internet Found",Toast.LENGTH_SHORT);
+        }
+
         tabLayout.setupWithViewPager(viewPager);
         img_back.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -56,6 +56,7 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
         image=Utility.getPref(MyAccountActivity.this, Constants.userimg,null);
         txt_name.setText(name);
         txt_email.setText(email);
+        img_back.setOnClickListener(this);
         txtChangePassword.setOnClickListener(this);
         //dummy();
         if (image!=null){
@@ -123,6 +124,9 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
                 Intent intent=new Intent(MyAccountActivity.this,ChangePasswordActivity.class);
                 intent.putExtra("screen","change");
                 startActivity(intent);
+                break;
+            case R.id.imgback:
+                onBackPressed();
                 break;
         }
     }

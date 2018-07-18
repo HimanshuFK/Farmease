@@ -68,13 +68,19 @@ public class FragmentAccount extends Fragment implements View.OnClickListener {
                     String token=Utility.getPref(getActivity(),Constants.token,null);
 
                     if (token!=null){
-                        logout(token);
+                        if (Utility.isInternetConnected(getActivity())){
+                            logout(token);
+                        }else {
+                            AppToast.showToast(getActivity(),"No Internet Found",Toast.LENGTH_SHORT);
+                        }
+
                     }else {
                         Utility.saveBooleanDataTosharedPrefences(getActivity(), Constants.LOGIN,false);
                         Toast.makeText(getActivity(), "Session Expired Login again", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getActivity(), LoginActivity.class));
                         getActivity().finishAffinity();
                     }
+                    Utility.clearAll(getActivity());
                 }else {
                     startActivity(new Intent(getActivity(),LoginActivity.class));
                 }

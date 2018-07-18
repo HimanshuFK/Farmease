@@ -14,11 +14,14 @@ import com.farmease.app.adapter.ReviewAdapter;
 import com.farmease.app.adapter.SlideImageAdapter;
 import com.farmease.app.bean.BeanProduct;
 import com.farmease.app.bean.BeanUserReview;
+import com.farmease.app.model.Product;
 import com.farmease.app.model.UserReview;
 import com.farmease.app.network.RetrofitErrorHandler;
 import com.farmease.app.network.RetrofitFactory;
 import com.farmease.app.services.APIService;
+import com.farmease.app.utility.AppToast;
 import com.farmease.app.utility.CustomProgressBar;
+import com.farmease.app.utility.Utility;
 
 import java.util.ArrayList;
 
@@ -49,7 +52,12 @@ public class ProductReviewsActivity extends AppCompatActivity {
         progressBar=CustomProgressBar.getInstance();
         rcViewReviews.setHasFixedSize(true);
         rcViewReviews.setLayoutManager(new LinearLayoutManager(ProductReviewsActivity.this, LinearLayoutManager.VERTICAL, false));
-        getUserReviews(getIntent().getExtras().getInt("id"));
+        if (Utility.isInternetConnected(ProductReviewsActivity.this)){
+            getUserReviews(getIntent().getExtras().getInt("id"));
+        }else {
+            AppToast.showToast(ProductReviewsActivity.this,"No Internet Found",Toast.LENGTH_SHORT);
+        }
+
 
         imgBack.setOnClickListener(new View.OnClickListener() {
             @Override

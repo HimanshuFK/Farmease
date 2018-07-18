@@ -5,15 +5,14 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <uses-feature android:name="android.hardware.location.gps" />
-
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name=".app.AppApplication"
         android:allowBackup="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/appicon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -57,7 +56,15 @@
         <activity android:name=".activity.ChangePasswordActivity" />
         <activity android:name=".activity.ForgetPasswordActivity" />
         <activity android:name=".activity.OtpActivity" />
-        <activity android:name=".activity.ProductReviewsActivity"></activity>
+        <activity android:name=".activity.ProductReviewsActivity" />
+        <activity android:name=".activity.ProductConfirmActivity" />
+        <activity android:name=".activity.ProductListActivity" />
+        <activity android:name=".TaskActivity" />
+        <activity android:name=".activity.CartActivity" />
+        <activity
+            android:name=".activity.SearchActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".activity.OrderSummaryActivity"></activity>
     </application>
 
 </manifest>

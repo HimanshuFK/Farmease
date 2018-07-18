@@ -19,8 +19,10 @@ import com.farmease.app.model.Category;
 import com.farmease.app.network.RetrofitErrorHandler;
 import com.farmease.app.network.RetrofitFactory;
 import com.farmease.app.services.APIService;
+import com.farmease.app.utility.AppToast;
 import com.farmease.app.utility.ClickListener;
 import com.farmease.app.utility.CustomProgressBar;
+import com.farmease.app.utility.Utility;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,9 +53,14 @@ public class FragmentCategory extends Fragment implements ClickListener{
         rvcategory.setHasFixedSize(true);
         rvcategory.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
-        ItemDecoration itemDecoration = new ItemDecoration(getActivity(), R.dimen.item_offset);
-       // rvcategory.addItemDecoration(itemDecoration);
-        getCategory();
+        /*ItemDecoration itemDecoration = new ItemDecoration(getActivity(), R.dimen.item_offset);
+          rvcategory.addItemDecoration(itemDecoration);*/
+        if (Utility.isInternetConnected(getActivity())){
+            getCategory();
+        }else {
+            AppToast.showToast(getActivity(),"No Internet Found",Toast.LENGTH_SHORT);
+        }
+
         return view;
     }
 

@@ -64,14 +64,16 @@ public class FragmentSubCategory extends Fragment implements ClickListener{
         rvcategory.setAdapter(mAdapter);
         mAdapter.setClickListener(this);
         ItemDecoration itemDecoration = new ItemDecoration(getActivity(), R.dimen.item_offset);
-        rvcategory.addItemDecoration(itemDecoration);
+        //rvcategory.addItemDecoration(itemDecoration);
         if (getArguments()!=null){
             name=getArguments().getString("name");
             id=getArguments().getString("id");
-            getProduct(id);
+            if (Utility.isInternetConnected(getActivity())){
+                getProduct(id);
+            }else {
+                AppToast.showToast(getActivity(),"No Internet Found",Toast.LENGTH_SHORT);
+            }
         }
-
-
         return view;
     }
 
@@ -136,8 +138,7 @@ public class FragmentSubCategory extends Fragment implements ClickListener{
     public void itemClicked(View view, int position) {
         Intent intent=new Intent(getActivity(), ProductActivity.class);
         intent.putExtra("id",mDataList.get(position).getId());
-        intent.putExtra("pro_name",mDataList.get(position).getName());
-        intent.putExtra("name",name);
+        intent.putExtra("name",mDataList.get(position).getName());
         startActivity(intent);
     }
 }

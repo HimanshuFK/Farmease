@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.farmease.app.HomeActivity;
@@ -14,9 +15,11 @@ import com.farmease.app.R;
 import com.farmease.app.bean.BeanCommon;
 import com.farmease.app.bean.BeanLogin;
 import com.farmease.app.login.LoginActivity;
+import com.farmease.app.login.SignupActivity;
 import com.farmease.app.network.RetrofitErrorHandler;
 import com.farmease.app.network.RetrofitFactory;
 import com.farmease.app.services.APIService;
+import com.farmease.app.utility.AppToast;
 import com.farmease.app.utility.Constants;
 import com.farmease.app.utility.CustomProgressBar;
 import com.farmease.app.utility.Utility;
@@ -37,6 +40,8 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
     EditText edtxtNewPassword;
     @BindView(R.id.btn_save)
     Button btnsave;
+    @BindView(R.id.backimg)
+    ImageView imgBack;
     private Unbinder unbinder;
     private CustomProgressBar progressBar;
 
@@ -47,6 +52,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
         unbinder= ButterKnife.bind(this);
         progressBar=CustomProgressBar.getInstance();
         btnsave.setOnClickListener(this);
+        imgBack.setOnClickListener(this);
         if (getIntent().getExtras().getString("screen").equalsIgnoreCase("forget")){
             edtxtCurrentPassword.setHint("New Password");
             edtxtNewPassword.setHint("Confirm Password");
@@ -135,9 +141,15 @@ public class ChangePasswordActivity extends AppCompatActivity implements View.On
                 if (getIntent().getExtras().getString("screen").equalsIgnoreCase("forget")){
                    forgetchangePassword(getIntent().getExtras().getString("email"),getIntent().getExtras().getString("otp"));
                 }else {
-                    changePassword();
+                    if (Utility.isInternetConnected(ChangePasswordActivity.this)){
+                        changePassword();
+                    }else {
+                        AppToast.showToast(ChangePasswordActivity.this,"No Internet Found",Toast.LENGTH_SHORT);
+                    }
                 }
-
+                break;
+            case R.id.backimg:
+                onBackPressed();
                 break;
         }
     }

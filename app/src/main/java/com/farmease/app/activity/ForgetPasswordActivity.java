@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.farmease.app.R;
@@ -14,6 +15,7 @@ import com.farmease.app.login.LoginActivity;
 import com.farmease.app.network.RetrofitErrorHandler;
 import com.farmease.app.network.RetrofitFactory;
 import com.farmease.app.services.APIService;
+import com.farmease.app.utility.AppToast;
 import com.farmease.app.utility.Constants;
 import com.farmease.app.utility.CustomProgressBar;
 import com.farmease.app.utility.Utility;
@@ -32,6 +34,8 @@ public class ForgetPasswordActivity extends AppCompatActivity implements View.On
     Button btnProceed;
     @BindView(R.id.edtxt_email)
     EditText edtEmail;
+    @BindView(R.id.backimg)
+    ImageView imgBack;
     private CustomProgressBar progressBar;
     private Unbinder unbinder;
 
@@ -42,6 +46,7 @@ public class ForgetPasswordActivity extends AppCompatActivity implements View.On
         unbinder= ButterKnife.bind(this);
         progressBar=CustomProgressBar.getInstance();
         btnProceed.setOnClickListener(this);
+        imgBack.setOnClickListener(this);
     }
     private void forgetPassword() {
 
@@ -89,7 +94,15 @@ public class ForgetPasswordActivity extends AppCompatActivity implements View.On
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btn_proceed:
-                forgetPassword();
+                if (Utility.isInternetConnected(ForgetPasswordActivity.this)){
+                    forgetPassword();
+                }else {
+                    AppToast.showToast(ForgetPasswordActivity.this,"No Internet Found",Toast.LENGTH_SHORT);
+                }
+
+                break;
+            case R.id.backimg:
+                onBackPressed();
                 break;
         }
     }

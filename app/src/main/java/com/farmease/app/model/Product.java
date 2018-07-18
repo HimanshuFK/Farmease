@@ -11,7 +11,7 @@ public class Product {
     String  category_id, subcategory_id, brand_id, name, description,featured_image,image_url, specifications;
 
     int id;
-    float ratings,base_price,per_hour_rate,discount,discounted_price;
+    float ratings,base_price,per_hour_rate,discount,discounted_price,tractor_cost,operator_cost;
     UserReview reviews;
     ArrayList<Product> similarProducts;
 
@@ -32,6 +32,14 @@ public class Product {
         this.per_hour_rate = per_hour_rate;
         this.discount = discount;
         this.discounted_price = discounted_price;
+    }
+
+    public float getTractor_cost() {
+        return tractor_cost;
+    }
+
+    public float getOperator_cost() {
+        return operator_cost;
     }
 
     public float getDiscounted_price() {

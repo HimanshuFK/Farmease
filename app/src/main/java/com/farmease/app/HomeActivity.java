@@ -27,14 +27,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.farmease.app.activity.MyAccountActivity;
+import com.farmease.app.activity.SearchActivity;
 import com.farmease.app.adapter.HomeAdapter;
 import com.farmease.app.adapter.SlideImageAdapter;
 import com.farmease.app.fragment.FragmentAccount;
+import com.farmease.app.fragment.FragmentCart;
 import com.farmease.app.fragment.FragmentCategory;
 import com.farmease.app.fragment.FragmentHome;
 import com.farmease.app.helper.BottomNavigationViewHelper;
 import com.farmease.app.location.LocationSearchActivity;
 import com.farmease.app.model.Home;
+import com.farmease.app.utility.AppToast;
 import com.farmease.app.utility.Constants;
 import com.farmease.app.utility.Utility;
 import com.google.android.gms.common.ConnectionResult;
@@ -103,7 +106,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     return true;
                 case R.id.navigation_czrt:
-                    Toast.makeText(HomeActivity.this, "Coming Soon..", Toast.LENGTH_SHORT).show();
+                    if (!(fragment instanceof FragmentCart)) {
+                        fragment = new FragmentCart();
+                        txt_category.setText("Cart");
+                        txt_category.setVisibility(View.VISIBLE);
+                        tvSelectLocation.setVisibility(View.GONE);
+                        start_fragment(fragment);
+                    }
                     return true;
                 case R.id.navigation_notifications:
                     if (!(fragment instanceof FragmentAccount)) {
@@ -135,6 +144,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
         unbinder = ButterKnife.bind(this);
         tvSelectLocation.setOnClickListener(this);
+        img_search.setOnClickListener(this);
         if (!(fragment instanceof FragmentHome)) {
             fragment = new FragmentHome();
             start_fragment(fragment);
@@ -222,7 +232,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             case REQUEST_CHECK_SETTINGS_GPS:
                 switch (resultCode) {
                     case Activity.RESULT_OK:
-                        getMyLocation();
+                        if (Utility.isInternetConnected(HomeActivity.this)){
+                            getMyLocation();
+                        }else {
+                            AppToast.showToast(HomeActivity.this,"No Internet Found",Toast.LENGTH_SHORT);
+                        }
+
                         break;
                     case Activity.RESULT_CANCELED:
                         finish();
@@ -332,7 +347,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(HomeActivity.this, LocationSearchActivity.class));
 
                 break;
-
+            case R.id.img_search:
+                startActivity(new Intent(HomeActivity.this, SearchActivity.class));
+                break;
         }
     }
 

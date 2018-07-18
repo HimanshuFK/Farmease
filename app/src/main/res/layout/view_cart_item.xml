@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/_5sdp"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="@dimen/_3sdp"
+        android:padding="@dimen/_3sdp"
+        android:background="@drawable/rectangle_border">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <ImageView
+                android:layout_width="@dimen/_80sdp"
+                android:layout_height="@dimen/_80sdp"
+                android:padding="@dimen/_7sdp"
+                android:id="@+id/cart_img"
+                android:layout_margin="@dimen/_10sdp"
+                android:background="@color/backgroundcolor"
+                android:src="@mipmap/ic_harvestor" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/cart_img"
+                android:padding="@dimen/_6sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:id="@+id/cart_title"
+                android:text="Harvester"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_13sdp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/cart_img"
+                android:paddingLeft="@dimen/_6sdp"
+                android:id="@+id/cart_price"
+                android:layout_below="@+id/cart_title"
+                android:text="$ 2,000"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/_11sdp" />
+
+            <ImageView
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:padding="@dimen/_8sdp"
+                android:layout_alignParentRight="true"
+                android:id="@+id/img_delete"
+                android:src="@drawable/close"/>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

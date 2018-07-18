@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.ProductListActivity">
+
+    <RelativeLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:background="@color/colorPrimaryDark">
+
+        <ImageView
+            android:id="@+id/backimg"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="match_parent"
+            android:padding="@dimen/_10sdp"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:id="@+id/txt_product_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Product List"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_15sdp" />
+        <ImageView
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="match_parent"
+            android:src="@mipmap/filter"
+            android:padding="@dimen/_10sdp"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:visibility="gone"
+        android:id="@+id/recyclerview_list"></android.support.v7.widget.RecyclerView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No data Found"
+        android:id="@+id/txt_noData"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        android:textSize="@dimen/_15sdp"
+        android:textColor="@color/black"/>
+
+</RelativeLayout>

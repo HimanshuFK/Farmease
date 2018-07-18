@@ -3,6 +3,7 @@ package com.farmease.app.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.PasswordTransformationMethod;
@@ -34,6 +35,7 @@ import com.farmease.app.bean.BeanLogin;
 import com.farmease.app.network.RetrofitErrorHandler;
 import com.farmease.app.network.RetrofitFactory;
 import com.farmease.app.services.APIService;
+import com.farmease.app.utility.AppToast;
 import com.farmease.app.utility.Constants;
 import com.farmease.app.utility.CustomProgressBar;
 import com.farmease.app.utility.Utility;
@@ -53,6 +55,7 @@ import java.util.Arrays;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -131,7 +134,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 } else if (password.length() == 0) {
                     edtPassword.setError("Password Required");
                 } else {
-                    userSignIn(email, password);
+                    if (Utility.isInternetConnected(LoginActivity.this)){
+                        userSignIn(email, password);
+                    }else {
+                        AppToast.showToast(LoginActivity.this,"No Internet Found",Toast.LENGTH_SHORT);
+                    }
+
                 }
 
             }
@@ -141,7 +149,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     //for google signin
     private void signIn() {
-        progressBar.showProgress(LoginActivity.this);
+
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -161,14 +169,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
             Utility.savePref(LoginActivity.this, Constants.username, personName);
             Utility.savePref(LoginActivity.this, Constants.useremail, email);
-            Utility.saveBooleanDataTosharedPrefences(LoginActivity.this, Constants.LOGIN, true);
 
             Log.e(TAG, "Name: " + personName + ", email: " + email
                     + ", Image: " + personPhotoUrl);
 
-            userGmailSignin(email);
-
-            finish();
+            if (Utility.isInternetConnected(LoginActivity.this)){
+                userGmailSignin(email);
+            }else {
+                AppToast.showToast(LoginActivity.this,"No Internet Found",Toast.LENGTH_SHORT);
+            }
         } else {
             // Signed out, show unauthenticated UI.
 
@@ -194,7 +203,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private void userGmailSignin(final String email) {
-
+        progressBar.showProgress(LoginActivity.this);
         Retrofit retrofit = RetrofitFactory.getInstance();
         APIService service = retrofit.create(APIService.class);
 
@@ -205,14 +214,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             public void onResponse(Call<BeanLogin> call, Response<BeanLogin> response) {
                 progressBar.hideProgress();
                 if (response.isSuccessful()) {
-                    finish();
+
                     Log.e("token", response.body().getResult().getToken());
                     Utility.savePref(LoginActivity.this, Constants.token, response.body().getResult().getToken());
+                    Utility.savePref(LoginActivity.this, Constants.userId, response.body().getResult().getId());
                     Utility.savePref(LoginActivity.this, Constants.login_type, "gmail");
                     Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     Utility.saveBooleanDataTosharedPrefences(LoginActivity.this, Constants.LOGIN, true);
                     //SharedPrefManager.getInstance(getApplicationContext()).userLogin(response.body().getUser());
                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                    finish();
                 } else {
                     int statusCode = response.code();
 
@@ -246,14 +257,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 progressBar.hideProgress();
                 Log.e("values", "" + email + password);
                 if (response.isSuccessful()) {
-                    finish();
+
                     Log.e("token", response.body().getResult().getToken());
                     Utility.savePref(LoginActivity.this, Constants.login_type, "manual");
+                    Utility.savePref(LoginActivity.this, Constants.userId, response.body().getResult().getId());
                     Utility.savePref(LoginActivity.this, Constants.token, response.body().getResult().getToken());
                     Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     Utility.saveBooleanDataTosharedPrefences(LoginActivity.this, Constants.LOGIN, true);
                     //SharedPrefManager.getInstance(getApplicationContext()).userLogin(response.body().getUser());
                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                    finish();
                 } else {
                     int statusCode = response.code();
 
@@ -280,21 +293,25 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         Retrofit retrofit = RetrofitFactory.getInstance();
         APIService service = retrofit.create(APIService.class);
 
-        Call<BeanLogin> call = service.userFB(fbId);
+        final String android_id = Settings.Secure.getString(getApplicationContext().getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        Call<BeanLogin> call = service.userFB(fbId,"Android",android_id);
 
         call.enqueue(new Callback<BeanLogin>() {
             @Override
             public void onResponse(Call<BeanLogin> call, Response<BeanLogin> response) {
                 progressBar.hideProgress();
                 if (response.isSuccessful()) {
-                    finish();
+
                     Log.e("token", response.body().getResult().getToken());
                     Utility.savePref(LoginActivity.this, Constants.login_type, "fb");
+                    Utility.savePref(LoginActivity.this, Constants.userId, response.body().getResult().getId());
                     Utility.savePref(LoginActivity.this, Constants.token, response.body().getResult().getToken());
                     Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     Utility.saveBooleanDataTosharedPrefences(LoginActivity.this, Constants.LOGIN, true);
                     //SharedPrefManager.getInstance(getApplicationContext()).userLogin(response.body().getUser());
                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                    finish();
                 } else {
                     int statusCode = response.code();
 
@@ -331,7 +348,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                     JSONObject picture = object.getJSONObject("picture").getJSONObject("data");
                                     String pictureUrl = picture.getString("url");
                                     String name = fName + " " + lName;
-                                    userFBSignin(id);
+                                    Utility.savePref(LoginActivity.this,Constants.userimg,pictureUrl);
+                                    if (Utility.isInternetConnected(LoginActivity.this)){
+                                        userFBSignin(id);
+                                    }else {
+                                        AppToast.showToast(LoginActivity.this,"No Internet Found",Toast.LENGTH_SHORT);
+                                    }
+
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();

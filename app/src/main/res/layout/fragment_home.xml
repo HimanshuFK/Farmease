@@ -2,6 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:visibility="gone"
+    android:id="@+id/layout_main"
     android:background="@color/backgroundcolor"
     android:orientation="vertical">
 
@@ -53,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:id="@+id/txt_seeall"
-                android:textColor="@color/grey"
+                android:textColor="@color/colorPrimary"
                 android:paddingRight="@dimen/_4sdp"
                 android:text="View all"
                 android:layout_toLeftOf="@+id/rightarrow"
@@ -90,7 +92,7 @@
                 android:layout_marginTop="@dimen/_8sdp"
                 android:id="@+id/txt_seealltop"
                 android:paddingRight="@dimen/_4sdp"
-                android:textColor="@color/grey"
+                android:textColor="@color/colorPrimary"
                 android:text="View all"
                 android:layout_toLeftOf="@+id/rightarrow"
                 android:layout_below="@+id/recyclerview_recentadd"/>

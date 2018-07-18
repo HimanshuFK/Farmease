@@ -3,7 +3,7 @@ package com.farmease.app.model;
 public class UserReview {
 
     int id,user_id,product_id,rating,totalReviews;
-    String first_name,last_name,review,created_at;
+    String first_name,last_name,review,created_at,category_name;
 
     public int getId() {
         return id;
@@ -27,6 +27,10 @@ public class UserReview {
 
     public String getFirst_name() {
         return first_name;
+    }
+
+    public String getCategory_name() {
+        return category_name;
     }
 
     public String getLast_name() {

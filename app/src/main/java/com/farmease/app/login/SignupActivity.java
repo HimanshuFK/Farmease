@@ -18,6 +18,7 @@ import com.farmease.app.bean.BeanLogin;
 import com.farmease.app.network.RetrofitErrorHandler;
 import com.farmease.app.network.RetrofitFactory;
 import com.farmease.app.services.APIService;
+import com.farmease.app.utility.AppToast;
 import com.farmease.app.utility.Constants;
 import com.farmease.app.utility.CustomProgressBar;
 import com.farmease.app.utility.Utility;
@@ -31,6 +32,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class SignupActivity extends AppCompatActivity implements View.OnClickListener{
+
     private Unbinder unbinder;
     private CustomProgressBar progressBar;
     @BindView(R.id.edtxt_email)
@@ -59,15 +61,11 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
-    private void userSignUp() {
+    private void userSignUp(final String name,final String email,final String password,final String mobile,final String lname) {
 
         progressBar.showProgress(SignupActivity.this);
 
-        final String name = edtName.getText().toString().trim();
-        final String email = edtEmail.getText().toString().trim();
-        final String password = edtPassword.getText().toString().trim();
-        final String mobile = edtMobile.getText().toString().trim();
-        final String lname = edtLname.getText().toString().trim();
+
         final String android_id = Settings.Secure.getString(getApplicationContext().getContentResolver(),
                 Settings.Secure.ANDROID_ID);
 
@@ -82,10 +80,11 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                 progressBar.hideProgress();
 
                 if (response.isSuccessful()) {
-                    finish();
+
                     Toast.makeText(SignupActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     //SharedPrefManager.getInstance(getApplicationContext()).userLogin(response.body().getUser());
                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                    finish();
                 } else {
                     int statusCode = response.code();
                     RetrofitErrorHandler errorHandler = new RetrofitErrorHandler(SignupActivity.this);
@@ -106,7 +105,30 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 
         switch (v.getId()){
             case R.id.btn_signup:
-                userSignUp();
+                final String name = edtName.getText().toString().trim();
+                final String email = edtEmail.getText().toString().trim();
+                final String password = edtPassword.getText().toString().trim();
+                final String mobile = edtMobile.getText().toString().trim();
+                final String lname = edtLname.getText().toString().trim();
+                if (name.length()==0){
+                    edtName.setError("First Name is required");
+                }else if (Utility.isValidEmail(email)){
+                    edtEmail.setError("Invalid email");
+                }else if (password.length()==0){
+                    edtPassword.setError("Password is required");
+                }else if (mobile.length()==0){
+                    edtMobile.setError("Mobile Number is required");
+                }else if (lname.length()==0){
+                    edtLname.setError("Last Name is required");
+                }else {
+                    if (Utility.isInternetConnected(SignupActivity.this)){
+                        userSignUp(name,email,password,mobile,lname);
+                    }else {
+                        AppToast.showToast(SignupActivity.this,"No Internet Found",Toast.LENGTH_SHORT);
+                    }
+
+                }
+
                 break;
             case R.id.txt_alreadymember:
                 startActivity(new Intent(SignupActivity.this,LoginActivity.class));

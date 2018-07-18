@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.SearchActivity">
+
+    <RelativeLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:background="@color/colorPrimaryDark">
+
+        <ImageView
+            android:id="@+id/backimg"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="match_parent"
+            android:padding="@dimen/_10sdp"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:id="@+id/txt_product_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Search Product"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_15sdp" />
+
+    </RelativeLayout>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:hint="Search an item"
+        android:background="@drawable/rectangle_border"
+        android:padding="@dimen/_10sdp"
+        android:textSize="@dimen/_14sdp"
+        android:id="@+id/edtxt_search"
+        android:layout_margin="@dimen/_20sdp"/>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/recyclerview_search"
+        android:layout_below="@id/edtxt_search"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="No Product Found"
+        android:gravity="center"
+        android:visibility="gone"
+        android:id="@+id/txt_noItems"
+        android:textSize="@dimen/_14sdp"/>
+</RelativeLayout>

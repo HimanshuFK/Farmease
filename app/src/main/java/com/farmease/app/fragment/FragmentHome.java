@@ -11,10 +11,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.farmease.app.R;
 import com.farmease.app.activity.ProductActivity;
+import com.farmease.app.activity.ProductListActivity;
 import com.farmease.app.adapter.HomeAdapter;
 import com.farmease.app.adapter.SlideImageAdapter;
 import com.farmease.app.bean.BeanCategory;
@@ -46,7 +49,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class FragmentHome extends Fragment implements ClickListener {
+public class FragmentHome extends Fragment implements ClickListener,View.OnClickListener {
 
     @BindView(R.id.pager)
     ViewPager viewPager;
@@ -56,6 +59,12 @@ public class FragmentHome extends Fragment implements ClickListener {
     RecyclerView rcviewTopRated;
     @BindView(R.id.indicator)
     CircleIndicator indicator;
+    @BindView(R.id.txt_seeall)
+    TextView txtSeeAll1;
+    @BindView(R.id.txt_seealltop)
+    TextView txtSeeAll2;
+    @BindView(R.id.layout_main)
+    LinearLayout layoutMain;
     private HomeAdapter mAdapter, mAdapter1;
     private Home mDataList;
     private ArrayList<Banner> bannerList;
@@ -77,16 +86,19 @@ public class FragmentHome extends Fragment implements ClickListener {
         trendProduct = new ArrayList<>();
         recentProduct = new ArrayList<>();
         progressBar = CustomProgressBar.getInstance();
-        mAdapter = new HomeAdapter(getActivity(), trendProduct);
-        mAdapter1 = new HomeAdapter(getActivity(), recentProduct);
         rcviewRecentadd.setHasFixedSize(true);
         rcviewTopRated.setHasFixedSize(true);
+        txtSeeAll1.setOnClickListener(this);
+        txtSeeAll2.setOnClickListener(this);
         rcviewRecentadd.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         rcviewTopRated.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
 
-        mAdapter.setClickListener(this);
+        if (Utility.isInternetConnected(getActivity())){
+            getHome();
+        }else {
+            AppToast.showToast(getActivity(),"No Internet Found",Toast.LENGTH_SHORT);
+        }
 
-        getHome();
 
         return view;
     }
@@ -167,6 +179,7 @@ public class FragmentHome extends Fragment implements ClickListener {
                 progressBar.hideProgress();
                 if (response.isSuccessful()) {
 
+                    layoutMain.setVisibility(View.VISIBLE);
                     mDataList = response.body().getResult();
                     bannerList = mDataList.getBanners();
 
@@ -177,6 +190,7 @@ public class FragmentHome extends Fragment implements ClickListener {
                     mAdapter1 = new HomeAdapter(getActivity(), recentProduct);
                     rcviewRecentadd.setAdapter(mAdapter1);
                     rcviewTopRated.setAdapter(mAdapter);
+                    clickListeners();
 
                 } else {
                     int statusCode = response.code();
@@ -208,9 +222,46 @@ public class FragmentHome extends Fragment implements ClickListener {
         }
     }
 
+    public void clickListeners(){
+        mAdapter1.setClickListener(new ClickListener() {
+            @Override
+            public void itemClicked(View view, int position) {
+                Intent intent = new Intent(getActivity(), ProductActivity.class);
+                intent.putExtra("id",mDataList.getTrendingProducts().get(position).getId());
+                intent.putExtra("name",mDataList.getTrendingProducts().get(position).getName());
+                startActivity(intent);
+            }
+        });
+        mAdapter.setClickListener(new ClickListener() {
+            @Override
+            public void itemClicked(View view, int position) {
+                Intent intent = new Intent(getActivity(), ProductActivity.class);
+                intent.putExtra("id",mDataList.getLatestProducts().get(position).getId());
+                intent.putExtra("name",mDataList.getLatestProducts().get(position).getName());
+                startActivity(intent);
+            }
+        });
+    }
+
     @Override
     public void itemClicked(View view, int position) {
-        Intent intent = new Intent(getActivity(), ProductActivity.class);
-        startActivity(intent);
+
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.txt_seeall:
+                Intent intent=new Intent(getActivity(), ProductListActivity.class);
+                intent.putExtra("type","latest");
+                startActivity(intent);
+                break;
+            case R.id.txt_seealltop:
+                Intent intent1=new Intent(getActivity(), ProductListActivity.class);
+                intent1.putExtra("type","trending");
+                startActivity(intent1);
+                break;
+        }
     }
 }

@@ -39,6 +39,11 @@ public class Utility {
         sp.edit().putString(field, value).commit();
     }
 
+    synchronized public static void clearAll(Context context) {
+        SharedPreferences sp = context.getSharedPreferences("farmease", context.MODE_PRIVATE);
+        sp.edit().clear().commit();
+    }
+
     synchronized public static String getPref(Context context, String field, String def) {
         SharedPreferences sp = context.getSharedPreferences("farmease", context.MODE_PRIVATE);
         return sp.getString(field, def);

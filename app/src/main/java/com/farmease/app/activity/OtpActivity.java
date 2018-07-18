@@ -15,7 +15,9 @@ import com.farmease.app.bean.BeanCommon;
 import com.farmease.app.network.RetrofitErrorHandler;
 import com.farmease.app.network.RetrofitFactory;
 import com.farmease.app.services.APIService;
+import com.farmease.app.utility.AppToast;
 import com.farmease.app.utility.CustomProgressBar;
+import com.farmease.app.utility.Utility;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -177,7 +179,11 @@ public class OtpActivity extends AppCompatActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btn_proceed:
-                forgetPassword();
+                if (Utility.isInternetConnected(OtpActivity.this)){
+                    forgetPassword();
+                }else {
+                    AppToast.showToast(OtpActivity.this,"No Internet Found",Toast.LENGTH_SHORT);
+                }
                 break;
         }
     }
